@@ -1,4 +1,4 @@
-package Belajar_Database
+package database
 
 import (
 	"context"
@@ -156,5 +156,30 @@ func TestPrepareStatement(t *testing.T) {
 		id, _ := result.LastInsertId()
 		fmt.Println(id)
 	}
+}
 
+func TestTx(t *testing.T) {
+	db := getConnection()
+	defer db.Close()
+
+	ctx := context.Background()
+	tx, err := db.Begin()
+	if err != nil {
+		panic(err)
+	}
+	script := "INSERT INTO comments (email, comment) VALUES (?, ?)"
+	for i := 0; i < 10; i++ {
+		email := "eko" + strconv.Itoa(i) + "@gmail.com"
+		comment := "Ini comment ke-" + strconv.Itoa(i)
+		result, err := tx.ExecContext(ctx, script, email, comment)
+		if err != nil {
+			panic(err)
+		}
+		id, _ := result.LastInsertId()
+		fmt.Println(id)
+	}
+	err = tx.Commit()
+	if err != nil {
+		panic(err)
+	}
 }

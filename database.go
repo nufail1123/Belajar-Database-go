@@ -1,11 +1,11 @@
-package Belajar_Database
+package database
 
 import (
 	"database/sql"
 	"time"
 )
 
-func getConnection() *sql.DB {
+func GetConnection() *sql.DB {
 	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/belajar_database_golang?parseTime=true")
 	if err != nil {
 		panic(err)
